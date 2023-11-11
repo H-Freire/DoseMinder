@@ -1,0 +1,33 @@
+# Quartus
+*.qarlog
+*.qsf
+*.qws
+*.rpt
+
+*_restored/
+
+db/
+incremental_db/
+output_files/
+
+# GHDL 
+*.cf
+*.vcd
+*.out
+
+# ModelSim
+*.vo
+*.tcl
+*.mti
+*.wlf
+*.mpf
+
+simulation/
+work/
+
+# Quartus
+*.bak
+
+# generic
+transcript
+*.txt
