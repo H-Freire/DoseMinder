@@ -43,14 +43,14 @@ begin
                            elsif check_timeout='1' then next_state <= dispense;
                            else                         next_state <= check;
                            end if;
-        when dispense  =>  if detected='0'          then next_state <= idle;
-                           elsif safety_timeout='1' then next_state <= await;
+        when dispense  =>  if safety_timeout='1' then   next_state <= countdown;
                            else                          next_state <= dispense;
                            end if;
-        when await     =>  if safety_timeout='1' then next_state <= countdown;
-                           else                       next_state <= await;
+        when countdown =>  next_state <= await;
+        when await     =>  if safety_timeout='0' then next_state <= await;
+                           elsif detected='1' then next_state <= dispense;
+                           else                        next_state <= idle; -- detected 0 and safety timeout 1
                            end if;
-        when countdown =>  next_state <= dispense;
         when others    =>  next_state <= idle;
       end case;
     end process;

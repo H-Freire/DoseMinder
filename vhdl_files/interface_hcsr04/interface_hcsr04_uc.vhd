@@ -24,6 +24,7 @@ entity interface_hcsr04_uc is
         medir      : in  std_logic;
         echo       : in  std_logic;
         fim_medida : in  std_logic;
+        timeout    : in  std_logic;
         zera       : out std_logic;
         gera       : out std_logic;
         registra   : out std_logic;
@@ -52,20 +53,21 @@ begin
     process (medir, echo, fim_medida, Eatual) 
     begin
       case Eatual is
-        when inicial =>         if medir='1' then Eprox <= preparacao;
+        when inicial       =>   if medir='1' then Eprox <= preparacao;
                                 else              Eprox <= inicial;
                                 end if;
-        when preparacao =>      Eprox <= envia_trigger;
+        when preparacao    =>   Eprox <= envia_trigger;
         when envia_trigger =>   Eprox <= espera_echo;
-        when espera_echo =>     if echo='0' then Eprox <= espera_echo;
-                                else             Eprox <= medida;
+        when espera_echo   =>   if echo='1'       then Eprox <= medida;
+                                elsif timeout='1' then Eprox <= preparacao; 
+                                else                   Eprox <= espera_echo;
                                 end if;
-        when medida =>          if fim_medida='1' then Eprox <= armazenamento;
+        when medida        =>   if fim_medida='1' then Eprox <= armazenamento;
                                 else                   Eprox <= medida;
                                 end if;
         when armazenamento =>   Eprox <= final;
-        when final =>           Eprox <= inicial;
-        when others =>          Eprox <= inicial;
+        when final         =>   Eprox <= inicial;
+        when others        =>   Eprox <= inicial;
       end case;
     end process;
 

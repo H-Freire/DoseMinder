@@ -18,7 +18,8 @@ entity pill_dispenser_fd is
         check_end  : out std_logic;
         safety_end : out std_logic;
         pwm        : out std_logic_vector(CONTAINERS-1 downto 0);
-        alert      : out std_logic;
+        alert      : out std_logic; -- system is active and alert
+        detected   : out std_logic; -- system can dispense pill 
         -- debug
         db_measurement : out std_logic_vector(11 downto 0);
         -- states
@@ -31,12 +32,12 @@ architecture df_arch of pill_dispenser_fd is
 
     constant pwm_period : natural := 1_000_000;
 
-    -- 2 seconds timer [100_000_000 / 1_000_000] (real/simu)
-    constant check_timeout       : natural := 100_000_000;
+    -- 2 seconds timer [100_000_000 (2s)/ 1_000_000] (real/simu)
+    constant check_timeout       : natural := 10_000;
     constant check_timeout_bits  : natural := natural(ceil(log2(real(check_timeout))));
     
     -- 500 milliseconds delay [25_000_000 / 250_000] (real/simu)
-    constant safety_timeout      : natural := 25_000_000;
+    constant safety_timeout      : natural := 2_5000;
     constant safety_timeout_bits : natural := natural(ceil(log2(real(safety_timeout))));
 
     -- dosage and containers
@@ -44,8 +45,12 @@ architecture df_arch of pill_dispenser_fd is
     signal containers_enable : std_logic_vector(containers_range);
     signal pill_containers   : pill_count;
 
+    -- distance measurement
+    signal s_measurement : std_logic_vector(11 downto 0);
+    signal meas_cm : integer ;
+
     -- auxiliary signals
-    signal s_pwm, s_count_reset, s_rx_received : std_logic;
+    signal s_pwm, s_count_reset, s_rx_received, s_alert, s_close, s_meas_ready : std_logic;
     signal s_width : std_logic_vector(1 downto 0);
 
 begin
@@ -58,9 +63,9 @@ begin
         generic map (
             conf_periodo => pwm_period, 
             largura_00   => 0,
-            largura_01   => 25_000,
+            largura_01   => 250, -- 25_000
             largura_10   => 50_000,
-            largura_11   => 75_000
+            largura_11   => 750 -- 75_000
         )
         port map (
             clock   => clock,
@@ -86,12 +91,12 @@ begin
         port map (
             clock     => clock,
             reset     => reset,
-            medir     => '0',
+            medir     => s_alert, -- ended serial reception. waiting to dispense all medication
             echo      => echo,
             trigger   => trigger,
-            medida    => db_measurement,
-            pronto    => open,
-            db_reset  => open,
+            medida    => s_measurement,
+            pronto    => s_meas_ready, -- ended one measurement: compare
+            db_reset  => open, 
             db_medir  => open,
             db_estado => sensor_state
         );
@@ -136,6 +141,14 @@ begin
             );
     end generate;
 
-    alert <= '0' when pill_containers = (pill_containers'range => (others => '0')) else '1'; 
+    s_alert <= '0' when pill_containers = (pill_containers'range => (others => '0')) else '1'; 
+
+    -- compare distance measurement to minimum of 5 cm
+    meas_cm <= to_integer(unsigned(s_measurement));
+    s_close <= '1' when (0 < meas_cm and 6 > meas_cm) else '0';
+    
+    detected       <= s_alert and s_close;
+    alert          <= s_alert;
+    db_measurement <= s_measurement;
 
 end architecture;

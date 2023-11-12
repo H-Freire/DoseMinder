@@ -15,6 +15,8 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all; 
+use ieee.math_real.all;
 
 
 entity interface_hcsr04_fd is
@@ -28,6 +30,7 @@ entity interface_hcsr04_fd is
         trigger   : out std_logic;
         fim_medida: out std_logic;
         distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
+        timeout   : out std_logic;
         db_tick   : out std_logic
     );
 end entity interface_hcsr04_fd;
@@ -79,6 +82,21 @@ architecture fd_arch of interface_hcsr04_fd is
        );
     end component;
 
+    component contador_m 
+        generic (
+            constant M : integer;  
+            constant N : integer 
+        );
+        port (
+            clock : in  std_logic;
+            zera  : in  std_logic;
+            conta : in  std_logic;
+            Q     : out std_logic_vector (N-1 downto 0);
+            fim   : out std_logic;
+            meio  : out std_logic
+        );
+    end component;
+
     -- sinais
     signal s_tick, s_zera : std_logic;
     signal s_distancia_in : std_logic_vector(11 downto 0);
@@ -87,6 +105,11 @@ architecture fd_arch of interface_hcsr04_fd is
     -- saidas
     signal s_fim_medida, s_trigger : std_logic;
     signal s_distancia_out : std_logic_vector(11 downto 0);
+
+    -- timeout
+    signal s_timeout : std_logic;
+    constant check_timeout      : natural := 25_000_000; -- 0.5 segundo
+    constant check_timeout_bits : natural := natural(ceil(log2(real(check_timeout))));
 
 begin
     -- concatena
@@ -117,7 +140,7 @@ begin
         )
         port map (
             clock   => clock,
-            clear   => s_zera, 
+            clear   => reset, 
             enable  => registra,
             D       => s_distancia_in,
             Q       => s_distancia_out
@@ -135,10 +158,26 @@ begin
             pulso  => s_trigger,
             pronto => open
         );
+    
+    -- timeout para enviar outro trigger caso não venha um echo
+    TIMER: contador_m 
+        generic map (
+            M => check_timeout,
+            N => check_timeout_bits 
+        )
+        port map (
+            clock => clock,
+            zera  => zera,
+            conta => '1',
+            Q     => open,
+            fim   => s_timeout,
+            meio  => open
+        );
 
     fim_medida  <= s_fim_medida;
     trigger     <= s_trigger;
     distancia   <= s_distancia_out;
+    timeout     <= s_timeout;
     db_tick     <= s_tick;
 
 end architecture fd_arch;

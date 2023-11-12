@@ -17,7 +17,7 @@ entity pill_dispenser is
         db_pwm     : out std_logic;
         db_echo    : out std_logic;
         db_trigger : out std_logic;
-		  db_serial  : out std_logic;
+		db_serial  : out std_logic;
         db_state       : out std_logic_vector(6 downto 0);
         db_measurement : out std_logic_vector(20 downto 0)
     );
@@ -31,8 +31,8 @@ architecture rtl of pill_dispenser is
     signal s_state, dispenser_state, rx_state, sensor_state : std_logic_vector(3 downto 0);
 
     -- data flow and control unit signals
-    signal s_safety_end, s_check_end, s_count : std_logic;
-    signal s_move, s_discount, s_alert        : std_logic;
+    signal s_safety_end, s_check_end, s_count           : std_logic;
+    signal s_move, s_discount, s_alert, s_detected      : std_logic;
     
     -- debug auxiliary signal
     signal s_measurement : std_logic_vector(11 downto 0);
@@ -52,6 +52,7 @@ architecture rtl of pill_dispenser is
             safety_end : out std_logic;
             pwm        : out std_logic_vector(CONTAINERS-1 downto 0);
             alert      : out std_logic;
+            detected   : out std_logic;
             -- debug
             db_measurement : out std_logic_vector(11 downto 0);
             -- states
@@ -93,6 +94,7 @@ begin
             safety_end     => s_safety_end,    
             pwm            => s_pwm,
             alert          => s_alert,
+            detected       => s_detected,
             -- debug
             db_measurement => s_measurement,
             -- states
@@ -107,7 +109,7 @@ begin
             check_timeout  => s_check_end,
             safety_timeout => s_safety_end,
             --!! colocar s_alert em and com detecção do sensor de objeto próximo !!--
-            detected       => s_alert,
+            detected       => s_detected,
             -- control
             count          => s_count,
             move           => s_move,
