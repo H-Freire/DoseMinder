@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "71666103387",
+    "firebase_url": "https://doseminder-eab2d-default-rtdb.firebaseio.com",
+    "project_id": "doseminder-eab2d",
+    "storage_bucket": "doseminder-eab2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71666103387:android:ac9719f3cb9af566537b7e",
+        "android_client_info": {
+          "package_name": "usp.labdig.doseminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71666103387-rjg8dukvrrj9r03m9pobqh7fkvhf0f8q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "usp.labdig.doseminder",
+            "certificate_hash": "2204691503c2363ccb2ea75fb43460516ff0d98c"
+          }
+        },
+        {
+          "client_id": "71666103387-l2v0h0chlund7aumknb4qoldnrg6v8ad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-waQTAGm1SX6kMghf4DrVqV0PMThSH1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71666103387-l2v0h0chlund7aumknb4qoldnrg6v8ad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
