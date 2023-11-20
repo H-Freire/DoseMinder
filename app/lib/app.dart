@@ -7,8 +7,13 @@ import 'package:doseminder/view/sign_in_screen.dart';
 import 'package:doseminder/providers.dart';
 import 'package:doseminder/constants.dart';
 
+import 'package:mqtt_client/mqtt_server_client.dart';
+
 class App extends ConsumerWidget {
-  const App({super.key});
+  App({super.key});
+
+  final client = MqttServerClient('q35f5f23.ala.us-east-1.emqxsl.com', ''); // Replace with your broker's address
+  client.connect('flutter_client'); // Replace with a unique client ID
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +28,9 @@ class App extends ConsumerWidget {
         textTheme: GoogleFonts.montserratTextTheme(),
         useMaterial3: true,
       ),
-      home: ref.watch(user).isLogged ? const HomeScreen() : const SignInScreen(),
+      home: ref.watch(user).isLogged
+          ? HomeScreen(client: client)
+          : const SignInScreen(),
     );
   }
 }

@@ -8,9 +8,9 @@ final db = Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
 final auth = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 final user = ChangeNotifierProvider.autoDispose<UserChangeNotifier>(
     (ref) => UserChangeNotifier()..user = ref.watch(auth).currentUser);
-final collectionProvider = FutureProvider.autoDispose
+final collectionProvider = Provider.autoDispose
     .family<CollectionReference<Map<String, dynamic>>, String>(
-        (ref, userId) async {
+        (ref, userId) {
   return ref.watch(db).collection(userId);
 });
 final signInService = Provider<GoogleSignIn>((ref) => GoogleSignIn());

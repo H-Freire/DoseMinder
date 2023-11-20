@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "71666103387-ii1bb16ob6egf9tkbh5164lng6eq8upp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "usp.labdig.doseminder",
+            "certificate_hash": "20696c55b15855ee5c3d9d859fa33870d8e80ce9"
+          }
+        },
+        {
           "client_id": "71666103387-rjg8dukvrrj9r03m9pobqh7fkvhf0f8q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
