@@ -12,7 +12,5 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
-
   runApp(ProviderScope(child: App()));
 }

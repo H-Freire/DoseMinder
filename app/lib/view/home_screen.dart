@@ -10,7 +10,7 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({required this.client, super.key});
-  final MqttServerClient client;
+  final Future<MqttServerClient> client;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -23,8 +23,8 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 
-                <uses-permission android:name="android.permission.INTERNET" />
-                <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+                <!-- <uses-permission android:name="android.permission.INTERNET" />
+                <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

@@ -2,8 +2,9 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 Future<MqttServerClient> connect() async {
-  MqttServerClient client =
-      MqttServerClient.withPort('broker.emqx.io', 'flutter_client', 1883);
+  //Future<MqttServerClient> connect() async
+  MqttServerClient client = MqttServerClient.withPort(
+      'q35f5f23.ala.us-east-1.emqxsl.com', 'doseminder', 8883);
   client.logging(on: true);
   client.onConnected = onConnected;
   client.onDisconnected = onDisconnected;
@@ -11,10 +12,11 @@ Future<MqttServerClient> connect() async {
   client.onSubscribed = onSubscribed;
   client.onSubscribeFail = onSubscribeFail;
   client.pongCallback = pong;
+  client.keepAlivePeriod = 60;
 
   final connMessage = MqttConnectMessage()
-      .authenticateAs('username', 'password')
-      .keepAliveFor(60)
+      .authenticateAs('labdig', 'doseminder123')
+      //.keepAliveFor(60)
       .withWillTopic('willtopic')
       .withWillMessage('Will message')
       .startClean()
