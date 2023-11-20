@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserChangeNotifier extends ChangeNotifier {
+class UserService extends ChangeNotifier {
   User? _user;
   late bool _isLogged;
 

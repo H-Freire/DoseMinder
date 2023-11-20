@@ -12,15 +12,15 @@
 HardwareSerial SerialPort2(2);
 
 // WiFi
-const char *ssid = "miska_moska";
+const char *ssid     = "miska_moska";
 const char *password = "agora_vai";
 
 // MQTT Broker
-const char *mqtt_broker = "broker.emqx.io";
-const char *topic = "dosage";
+const char *mqtt_broker   = "broker.emqx.io";
+const char *topic         = "doseminder/dosage";
 const char *mqtt_username = "emqx";
 const char *mqtt_password = "public";
-const int   mqtt_port = 1883;
+const int   mqtt_port     = 1883;
 
 WiFiClient espClient;
 PubSubClient client(espClient);

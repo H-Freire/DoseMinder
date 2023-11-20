@@ -20,7 +20,7 @@ Future<void> signUp(BuildContext context, WidgetRef ref) async {
     UserCredential credentials =
         await ref.read(auth).signInWithCredential(authCredential);
 
-    ref.read(user).user = credentials.user;
+    ref.read(userProvider).user = credentials.user;
   }
 }
 

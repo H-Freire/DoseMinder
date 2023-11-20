@@ -7,14 +7,8 @@ import 'package:doseminder/view/sign_in_screen.dart';
 import 'package:doseminder/providers.dart';
 import 'package:doseminder/constants.dart';
 
-import 'package:doseminder/model/mqtt_connection.dart';
-
 class App extends ConsumerWidget {
-  App({super.key});
-
-  // https://cloud-intl.emqx.com/console/deployments/q35f5f23/overview
-  //final client = MqttServerClient('q35f5f23.ala.us-east-1.emqxsl.com', ''); // Replace with your broker's address
-  final client = connect(); // Replace with a unique client ID
+  const App({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,8 +23,8 @@ class App extends ConsumerWidget {
         textTheme: GoogleFonts.montserratTextTheme(),
         useMaterial3: true,
       ),
-      home: ref.watch(user).isLogged
-          ? HomeScreen(client: client)
+      home: ref.watch(userProvider).isLogged
+          ? const HomeScreen()
           : const SignInScreen(),
     );
   }

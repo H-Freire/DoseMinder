@@ -1,16 +1,12 @@
-//import 'dart:ffi';
-
-import 'package:doseminder/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:doseminder/providers.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:doseminder/model/dosage.dart';
+import 'package:doseminder/providers.dart';
+import 'package:doseminder/widgets/dose_card.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({required this.client, super.key});
-  final Future<MqttServerClient> client;
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +19,7 @@ class HomeScreen extends ConsumerWidget {
               onPressed: () async {
                 await ref.read(signInService).disconnect();
                 await ref.read(auth).signOut();
-                ref.read(user.notifier).user = null;
+                ref.read(userProvider.notifier).user = null;
               },
               icon: const Icon(Icons.logout)),
         ],
@@ -36,40 +32,22 @@ class HomeScreen extends ConsumerWidget {
                 .watch(collectionProvider(ref.watch(auth).currentUser!.uid))
                 .snapshots(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-                /* } else if (snapshot.connectionState == ConnectionState.done) {
-                return Text('done'); */
-              } else if (snapshot.hasError) {
+              if (snapshot.hasError) {
                 return Text('Error!');
               }
               if (snapshot.hasData) {
-                final docs = snapshot.data!.docs;
+                final prescriptions =
+                    Dosage.fromCollection(snapshot.data!.docs);
                 return ListView.builder(
-                  itemCount: docs.length,
+                  itemCount: prescriptions.length,
                   itemBuilder: (context, index) {
-                    final data = docs[index].data();
-                    return InkWell(
-                      child: Container(
-                        width: double.infinity,
-                        height: 150,
-                        margin: const EdgeInsets.all(15),
-                        color: Color(dmSecondary),
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('id: ${data['recipient']!}'),
-                            Text('${data['name']!}'),
-                            Text('${data['dose']!}'),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        var currentSerial = _dataToSerial(data['dose'], data['recipient']);
-                        print("Envia esse serial: $currentSerial");
-                      },
+                    final data = prescriptions[index];
+                    return DoseCard(
+                      data: data,
+                      onTap: () => ref.read(mqttProvider).publish(
+                            topic: 'doseminder/dosage',
+                            data: data.toString(),
+                          ),
                     );
                   },
                 );
@@ -84,15 +62,4 @@ class HomeScreen extends ConsumerWidget {
       ), */
     );
   }
-}
-
-String _dataToSerial(dynamic dose, dynamic recipient) {
-  var doseBinary = dose.toRadixString(2);
-  var recipientBinary = recipient.toRadixString(2);
-  var parity = '0';
-
-  print(doseBinary);
-  print(recipientBinary);
-
-  return parity;
 }
