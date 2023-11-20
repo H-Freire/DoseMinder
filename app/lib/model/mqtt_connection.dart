@@ -8,7 +8,7 @@ Future<MqttServerClient> connect() async {
   client.logging(on: true);
   client.onConnected = onConnected;
   client.onDisconnected = onDisconnected;
-  client.onUnsubscribed = onUnsubscribed as UnsubscribeCallback?;
+  client.onUnsubscribed = onUnsubscribed;
   client.onSubscribed = onSubscribed;
   client.onSubscribeFail = onSubscribeFail;
   client.pongCallback = pong;
@@ -17,8 +17,8 @@ Future<MqttServerClient> connect() async {
   final connMessage = MqttConnectMessage()
       .authenticateAs('labdig', 'doseminder123')
       //.keepAliveFor(60)
-      .withWillTopic('willtopic')
-      .withWillMessage('Will message')
+      .withWillTopic('serial_request')
+      .withWillMessage('conectei?')
       .startClean()
       .withWillQos(MqttQos.atLeastOnce);
   client.connectionMessage = connMessage;
@@ -61,7 +61,7 @@ void onSubscribeFail(String topic) {
 }
 
 // unsubscribe succeeded
-void onUnsubscribed(String topic) {
+void onUnsubscribed(String? topic) {
   print('Unsubscribed topic: $topic');
 }
 
