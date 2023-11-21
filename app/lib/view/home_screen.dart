@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:doseminder/model/dosage.dart';
 import 'package:doseminder/providers.dart';
-import 'package:doseminder/widgets/dose_card.dart';
+import 'package:doseminder/widget/dose_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

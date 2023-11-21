@@ -12,8 +12,8 @@
 HardwareSerial SerialPort2(2);
 
 // WiFi
-const char *ssid     = "miska_moska";
-const char *password = "agora_vai";
+const char *ssid     = "Pixel_4276";
+const char *password = "vaifuncionar";
 
 // MQTT Broker
 const char *mqtt_broker   = "broker.emqx.io";
@@ -28,7 +28,7 @@ PubSubClient client(espClient);
 void setup() {
   // Set software and a hardware serial bridges;
   Serial.begin(BAUD_RATE);
-  SerialPort2.begin(BAUD_RATE, SERIAL_8N1, RX2, TX2);
+  Serial2.begin(BAUD_RATE, SERIAL_7O1, RX2, TX2);
   delay(2000);
 
   // Connecting to a WiFi network
@@ -45,7 +45,7 @@ void setup() {
   client.setCallback(callback);
 
   while (!client.connected()) {
-    String client_id = "esp32-client-";
+    String client_id = "doseminder_esp";
     client_id += String(WiFi.macAddress());
     Serial.printf("Client ID: %s\n", client_id.c_str());
 
@@ -84,11 +84,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
     return;
   }
 
-  dose = (byte) doc["dose"] << 3;
-  recipient = doc["recipient"];
+  recipient = (byte) doc["recipient"] << 3;
+  dose = doc["dose"];
   data = dose + recipient;
   Serial2.write(data);
-  Serial.printf("Serial transmission of %x: ", data);
+  Serial.write(data);
+  Serial.print("Serial transmission of: ");
+  Serial.print(data, BIN);
 }
 
 void loop() {
