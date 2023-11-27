@@ -87,8 +87,8 @@ void callback(char *topic, byte *payload, unsigned int length) {
   recipient = (byte) doc["recipient"] << 3;
   dose = doc["dose"];
   data = dose + recipient;
+  
   Serial2.write(data);
-  Serial.write(data);
   Serial.print("Serial transmission of: ");
   Serial.print(data, BIN);
 }

@@ -48,8 +48,8 @@ begin
                            end if;
         when countdown =>  next_state <= await;
         when await     =>  if safety_timeout='0' then next_state <= await;
-                           elsif detected='1' then next_state <= dispense;
-                           else                        next_state <= idle; -- detected 0 and safety timeout 1
+                           elsif detected='1'    then next_state <= dispense;
+                           else                       next_state <= idle; -- detected 0 and safety timeout 1
                            end if;
         when others    =>  next_state <= idle;
       end case;

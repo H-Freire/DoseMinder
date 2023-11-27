@@ -12,6 +12,7 @@ entity pill_dispenser is
         pwm       : out std_logic_vector(CONTAINERS-1 downto 0);
         trigger   : out std_logic;
         alert     : out std_logic;
+        detected  : out std_logic;
         -- debug
         db_reset   : out std_logic;
         db_pwm     : out std_logic;
@@ -139,6 +140,7 @@ begin
     trigger    <= s_trigger;
     pwm        <= s_pwm;
     alert      <= s_alert;
+    detected   <= s_detected;
 
     -- debug
     db_reset   <= reset;

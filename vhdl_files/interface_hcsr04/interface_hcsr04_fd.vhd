@@ -9,7 +9,6 @@
 -- Revisoes  :
 --     Data        Versao  Autor                            Descricao
 --     16/09/2023  1.0     Mariana Dutra e Henrique Silva   versao inicial
---
 --------------------------------------------------------------------
 --
 
@@ -17,7 +16,6 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all; 
 use ieee.math_real.all;
-
 
 entity interface_hcsr04_fd is
     port (
@@ -29,7 +27,8 @@ entity interface_hcsr04_fd is
         zera      : in  std_logic;
         trigger   : out std_logic;
         fim_medida: out std_logic;
-        distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
+        distancia : out std_logic_vector(11 downto 0);  -- 3 digitos BCD
+        delay     : out std_logic; -- delay between echo and new trigger
         timeout   : out std_logic;
         db_tick   : out std_logic
     );
@@ -98,7 +97,7 @@ architecture fd_arch of interface_hcsr04_fd is
     end component;
 
     -- sinais
-    signal s_tick, s_zera : std_logic;
+    signal s_conta, s_tick, s_zera, s_zera_delay, s_delay : std_logic;
     signal s_distancia_in : std_logic_vector(11 downto 0);
     signal s_digito0, s_digito1, s_digito2 : std_logic_vector(3 downto 0);
 
@@ -174,9 +173,24 @@ begin
             meio  => open
         );
 
+    s_zera_delay <= not zera;
+    s_conta <= zera and not s_delay;
+
+    DELAY_TIMER: contador_m -- delay between echo and new trigger
+        generic map (M => 5_000_000, N => 23)
+        port map (
+            clock => clock,
+            zera  => s_zera_delay,
+            conta => s_conta,
+            Q     => open,
+            fim   => s_delay,
+            meio  => open
+        );
+
     fim_medida  <= s_fim_medida;
     trigger     <= s_trigger;
     distancia   <= s_distancia_out;
+    delay       <= s_delay;
     timeout     <= s_timeout;
     db_tick     <= s_tick;
 

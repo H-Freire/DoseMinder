@@ -33,11 +33,11 @@ architecture df_arch of pill_dispenser_fd is
     constant pwm_period : natural := 1_000_000;
 
     -- 2 seconds timer [100_000_000 (2s)/ 1_000_000] (real/simu)
-    constant check_timeout       : natural := 10_000;
+    constant check_timeout       : natural := 100_000_000;
     constant check_timeout_bits  : natural := natural(ceil(log2(real(check_timeout))));
     
     -- 500 milliseconds delay [25_000_000 / 250_000] (real/simu)
-    constant safety_timeout      : natural := 2_5000;
+    constant safety_timeout      : natural := 25_000_000;
     constant safety_timeout_bits : natural := natural(ceil(log2(real(safety_timeout))));
 
     -- dosage and containers
@@ -47,7 +47,7 @@ architecture df_arch of pill_dispenser_fd is
 
     -- distance measurement
     signal s_measurement : std_logic_vector(11 downto 0);
-    signal meas_cm : integer ;
+    signal meas_cm       : integer ;
 
     -- auxiliary signals
     signal s_pwm, s_count_reset, s_rx_received, s_alert, s_close, s_meas_ready : std_logic;
@@ -56,16 +56,15 @@ architecture df_arch of pill_dispenser_fd is
 begin
 
     s_count_reset <= not count;
-    --!! apenas teste !!--
     s_width       <= "11" when move='1' else "01";
 
     PWM_CIRCUIT: circuito_pwm
         generic map (
             conf_periodo => pwm_period, 
             largura_00   => 0,
-            largura_01   => 250, -- 25_000
+            largura_01   => 25_000, -- 250
             largura_10   => 50_000,
-            largura_11   => 750 -- 75_000
+            largura_11   => 75_000  -- 750
         )
         port map (
             clock   => clock,
@@ -86,7 +85,6 @@ begin
             db_estado         => rx_state
         );
 
-    --!! TODO !!--
     HCSR04: interface_hcsr04
         port map (
             clock     => clock,
@@ -126,7 +124,7 @@ begin
     -- 4 bits to identify the container (6 downto 3) and
     -- the 3 least significant bits to indicate the proper dosage of the container (2 downto 0)
     CONTAINERS: for i in pill_containers'range generate
-        containers_enable(i) <= '1' when 14 = to_integer(unsigned(s_dosage(6 downto 3))) and s_rx_received='1' else '0';
+        containers_enable(i) <= '1' when i = to_integer(unsigned(s_dosage(6 downto 3))) and s_rx_received='1' else '0';
         pwm(i) <= '0' when pill_containers(i) = "000" else s_pwm;
 
         PILL_COUNT: downwards_counter
@@ -143,9 +141,9 @@ begin
 
     s_alert <= '0' when pill_containers = (pill_containers'range => (others => '0')) else '1'; 
 
-    -- compare distance measurement to minimum of 5 cm
+    -- compare distance measurement to minimum of 6 cm
     meas_cm <= to_integer(unsigned(s_measurement));
-    s_close <= '1' when (0 < meas_cm and 6 > meas_cm) else '0';
+    s_close <= '1' when (0 < meas_cm and 7 > meas_cm) else '0';
     
     detected       <= s_alert and s_close;
     alert          <= s_alert;
