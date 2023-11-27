@@ -15,7 +15,6 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 
-
 entity interface_hcsr04 is
     port (
         clock     : in  std_logic;
@@ -43,7 +42,8 @@ architecture estrutural of interface_hcsr04 is
             zera      : in  std_logic;
             trigger   : out std_logic;
             fim_medida: out std_logic;
-            distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
+            distancia : out std_logic_vector(11 downto 0);
+            delay     : out std_logic;
             timeout   : out std_logic;
             db_tick   : out std_logic
         );
@@ -56,6 +56,7 @@ architecture estrutural of interface_hcsr04 is
             medir      : in  std_logic;
             echo       : in  std_logic;
             fim_medida : in  std_logic;
+            delay      : in  std_logic;
             timeout    : in  std_logic;
             zera       : out std_logic;
             gera       : out std_logic;
@@ -66,7 +67,8 @@ architecture estrutural of interface_hcsr04 is
     end component;
 
     -- sinais de controle
-    signal s_gera, s_registra, s_zera, s_fim_medida, s_timeout: std_logic;
+    signal s_delay, s_gera, s_registra, s_zera : std_logic;
+    signal s_fim_medida, s_timeout             : std_logic;
 
     -- saidas do circuito
     signal s_trigger, s_pronto : std_logic;    
@@ -85,6 +87,7 @@ begin
             trigger     => s_trigger,
             fim_medida  => s_fim_medida,
             distancia   => s_medida,
+            delay       => s_delay
             timeout     => s_timeout,
             db_tick     => open
         );
@@ -96,6 +99,7 @@ begin
             medir       => medir,
             echo        => echo,
             fim_medida  => s_fim_medida,
+            delay       => s_delay
             timeout     => s_timeout,
             zera        => s_zera,
             gera        => s_gera,

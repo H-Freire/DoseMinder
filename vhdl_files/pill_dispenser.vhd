@@ -18,7 +18,7 @@ entity pill_dispenser is
         db_pwm     : out std_logic;
         db_echo    : out std_logic;
         db_trigger : out std_logic;
-		db_serial  : out std_logic;
+        db_serial  : out std_logic;
         db_state       : out std_logic_vector(6 downto 0);
         db_measurement : out std_logic_vector(20 downto 0)
     );
@@ -109,7 +109,6 @@ begin
             reset          => reset,
             check_timeout  => s_check_end,
             safety_timeout => s_safety_end,
-            --!! colocar s_alert em and com detecção do sensor de objeto próximo !!--
             detected       => s_detected,
             -- control
             count          => s_count,
@@ -146,7 +145,7 @@ begin
     db_reset   <= reset;
     db_pwm     <= s_pwm(0);
     db_echo    <= echo;
-	db_serial  <= serial;
+    db_serial  <= serial;
     db_trigger <= s_trigger;
 
 end architecture;
