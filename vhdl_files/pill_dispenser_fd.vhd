@@ -36,8 +36,8 @@ architecture df_arch of pill_dispenser_fd is
     constant check_timeout       : natural := 100_000_000;
     constant check_timeout_bits  : natural := natural(ceil(log2(real(check_timeout))));
     
-    -- 500 milliseconds delay [25_000_000 / 250_000] (real/simu)
-    constant safety_timeout      : natural := 25_000_000;
+    -- 500 milliseconds delay [40_000_000 / 250_000] (real/simu)
+    constant safety_timeout      : natural := 40_000_000;
     constant safety_timeout_bits : natural := natural(ceil(log2(real(safety_timeout))));
 
     -- dosage and containers
@@ -62,9 +62,9 @@ begin
         generic map (
             conf_periodo => pwm_period, 
             largura_00   => 0,
-            largura_01   => 25_000, -- 250
-            largura_10   => 50_000,
-            largura_11   => 75_000  -- 750
+            largura_01   => 30_000, -- 300
+            largura_10   => 0,
+            largura_11   => 80_000  -- 800
         )
         port map (
             clock   => clock,
@@ -143,7 +143,7 @@ begin
 
     -- compare distance measurement to minimum of 6 cm
     meas_cm <= to_integer(unsigned(s_measurement));
-    s_close <= '1' when (0 < meas_cm and 7 > meas_cm) else '0';
+    s_close <= '1' when (0 < meas_cm and 10 > meas_cm) else '0';
     
     detected       <= s_alert and s_close;
     alert          <= s_alert;
