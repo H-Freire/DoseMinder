@@ -8,3 +8,8 @@ Digital circuit for controlling movement and receiving serial communication.
 Digital circuit integration with ultrasonic sensor HC-SR04.
 
 3D model development.
+
+### Week 3
+Mobile app development.
+
+Firebase database integration.
