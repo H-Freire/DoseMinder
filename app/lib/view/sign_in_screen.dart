@@ -1,3 +1,4 @@
+import 'package:doseminder/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +31,7 @@ class SignInScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Color(dmPrimary),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Column(
@@ -44,7 +45,7 @@ class SignInScreen extends ConsumerWidget {
                 style: Theme.of(context)
                     .textTheme
                     .displayMedium!
-                    .copyWith(color: Colors.white70)),
+                    .copyWith(color: const Color.fromARGB(255, 255, 255, 255))),
             const SizedBox(height: 75),
             ElevatedButton(
               child: Row(
