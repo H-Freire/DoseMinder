@@ -12,4 +12,13 @@ Digital circuit integration with ultrasonic sensor HC-SR04.
 ### Week 3
 Mobile app development.
 
-Firebase database integration.
+MQTT communication with ESP32.
+
+Firebase database integration and user authentication.
+
+### Week 4
+3D printing of the prototype.
+
+Mobile app improvement.
+
+Integration of all modules and final adjustments.
